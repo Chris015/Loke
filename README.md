@@ -88,7 +88,8 @@ Note that Amazon sometimes change their billing csv's. Revisit if needed.
 
 **AWS permissions**
 
-The following policy grants the minimum permissions for Loke to run.
+The following 3 policies grants the minimum permissions for Loke to run.
+1. Athena Policy
 ```
 {
     "Version": "2012-10-17",
@@ -96,18 +97,10 @@ The following policy grants the minimum permissions for Loke to run.
         {
             "Effect": "Allow",
             "Action": [
-                "s3:ListBucket",
-                "s3:GetObject",
-                "s3:PutObject"
-            ],
-            "Resource": [
-                "arn:aws:s3:::<BUCKET-NAME>*"
-            ]
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "ses:SendEmail"
+                "athena:GetExecutionEngine",
+                "athena:GetQueryExecution",
+                "athena:StartQueryExecution",
+                "athena:GetQueryResults"
             ],
             "Resource": [
                 "*"
@@ -116,11 +109,45 @@ The following policy grants the minimum permissions for Loke to run.
         {
             "Effect": "Allow",
             "Action": [
-                "athena:GetExecutionEngine",
-                "athena:GetQueryExecution",
-                "athena:StartQueryExecution",
-                "athena:GetQueryResults",
-                "athena:GetQueryResult"
+                "s3:ListBucket",
+                "s3:GetObject",
+                "s3:PutObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::<STAGING-DIR>*"
+            ]
+        }
+    ]
+}
+```
+2. S3 Policy for the bucket where you keep your billing logs
+```
+{
+    "Version": "2012-11-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:List*",
+                "s3:Get*"
+            ],
+            "Resource": [
+                "arn:aws:s3:::<BILLING-BUCKET-NAME>/*",
+                "arn:aws:s3:::<BILIING-BUCKET-NAME>"
+            ]
+        }
+    ]
+}
+```
+3. SES Policy
+```
+{
+    "Version": "2012-11-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ses:SendEmail"
             ],
             "Resource": [
                 "*"
