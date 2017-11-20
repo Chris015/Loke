@@ -1,6 +1,5 @@
 package loke.service;
 
-import loke.config.AccountReader;
 import loke.db.athena.AthenaClient;
 import loke.utils.CalendarGenerator;
 import loke.utils.ResourceLoader;
@@ -13,7 +12,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static loke.db.athena.JdbcManager.QueryResult;
 import static loke.service.SpendPerEmployeeByAccount.SpendPerEmployeeAndAccountDao;

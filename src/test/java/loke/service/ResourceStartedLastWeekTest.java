@@ -1,6 +1,5 @@
 package loke.service;
 
-import loke.config.AccountReader;
 import loke.db.athena.AthenaClient;
 import loke.utils.ResourceLoader;
 import org.junit.Before;
@@ -11,7 +10,6 @@ import testutilities.ResourceLoaderTestUtility;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static loke.db.athena.JdbcManager.QueryResult;
 import static loke.service.ResourceStartedLastWeek.ResourceStartedLastWeekDao;
