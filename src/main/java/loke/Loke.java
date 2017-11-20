@@ -95,7 +95,7 @@ public class Loke {
         List<Employee> employeeReports = costReportGenerator.generateReports();
         List<Employee> adminReports = costReportGenerator.generateAdminReports();
 
-        if(employeeReports.size() > 0) {
+        if (employeeReports.size() > 0) {
             emailSender.sendEmployeeMails(employeeReports);
         }
 

@@ -2,7 +2,7 @@
 <Configuration status="INFO">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %-26c{1} - %msg%n" />
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %-26c{1} - %msg%n"/>
         </Console>
         <File name="log" fileName="log.log" immediateFlush="true" append="true">
             <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} %-5level %-26c{1} - %msg%n"/>
@@ -10,7 +10,7 @@
     </Appenders>
     <Loggers>
         <Root level="DEBUG">
-            <AppenderRef ref="Console" />
+            <AppenderRef ref="Console"/>
             <AppenderRef ref="log"/>
         </Root>
     </Loggers>

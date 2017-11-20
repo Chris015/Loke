@@ -17,9 +17,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAccessor;
-import java.time.temporal.TemporalUnit;
 import java.util.*;
 
 public class ResourceStartedLastWeek implements Service {
@@ -137,12 +134,12 @@ public class ResourceStartedLastWeek implements Service {
         }
 
         public double calculateTotalSpend() {
-        double total = 0;
-        for (Resource resource : resources) {
-            total += resource.getCost();
+            double total = 0;
+            for (Resource resource : resources) {
+                total += resource.getCost();
+            }
+            return total;
         }
-        return total;
-    }
 
         public String getUserName() {
             return userName;

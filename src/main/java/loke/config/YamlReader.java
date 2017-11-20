@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 
-public class YamlReader implements ConfigReader{
+public class YamlReader implements ConfigReader {
     private static final Logger log = LogManager.getLogger(YamlReader.class);
     private ObjectMapper objectMapper;
 

@@ -26,8 +26,16 @@ public class Configuration {
         return accessKey;
     }
 
+    public void setAccessKey(String accessKey) {
+        this.accessKey = accessKey;
+    }
+
     public String getSecretAccessKey() {
         return secretAccessKey;
+    }
+
+    public void setSecretAccessKey(String secretAccessKey) {
+        this.secretAccessKey = secretAccessKey;
     }
 
     public String getRegion() {
@@ -50,6 +58,10 @@ public class Configuration {
         return userOwnerRegExp;
     }
 
+    public void setUserOwnerRegExp(String userOwnerRegExp) {
+        this.userOwnerRegExp = userOwnerRegExp;
+    }
+
     public String getFromEmailAddress() {
         return fromEmailAddress;
     }
@@ -63,22 +75,10 @@ public class Configuration {
     }
 
     public List<Admin> getAdmins() {
-       return this.admins;
+        return this.admins;
     }
 
     public void setAdmins(List<Admin> admins) {
         this.admins = admins;
-    }
-
-    public void setAccessKey(String accessKey) {
-        this.accessKey = accessKey;
-    }
-
-    public void setSecretAccessKey(String secretAccessKey) {
-        this.secretAccessKey = secretAccessKey;
-    }
-
-    public void setUserOwnerRegExp(String userOwnerRegExp) {
-        this.userOwnerRegExp = userOwnerRegExp;
     }
 }
