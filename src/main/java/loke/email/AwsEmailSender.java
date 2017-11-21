@@ -62,7 +62,8 @@ public class AwsEmailSender {
             }
         }
         if (dryRun) {
-            log.info("DryRun: Emails not sent\nAdmin-mail: {}", htmlBody.toString().trim());
+            log.info("DryRun: Admin-email not sent");
+            log.trace("Admin-email: {}", htmlBody.toString().trim());
             return;
         }
 
