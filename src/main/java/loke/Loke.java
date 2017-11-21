@@ -92,10 +92,18 @@ public class Loke {
     }
 
     public void run() {
-        List<Employee> employeeReports = costReportGenerator.generateReports();
-        List<Employee> adminReports = costReportGenerator.generateAdminReports();
 
-        if(employeeReports.size() > 0) {
+        List<Employee> employeeReports = null;
+        List<Employee> adminReports;
+
+        if(configuration.isSendOnlyAdminReport()){
+            adminReports = costReportGenerator.generateAdminReports();
+        } else {
+            adminReports = costReportGenerator.generateAdminReports();
+            employeeReports = costReportGenerator.generateReports();
+        }
+
+        if(employeeReports != null && employeeReports.size() > 0) {
             emailSender.sendEmployeeMails(employeeReports);
         }
 

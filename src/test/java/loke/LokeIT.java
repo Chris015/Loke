@@ -66,6 +66,7 @@ public class LokeIT {
         configuration.setAccessKey("");
         configuration.setSecretAccessKey("");
         configuration.setUserOwnerRegExp("^([a-z]+\\.[a-z]+)+$");
+        configuration.setSendOnlyAdminReport(false);
 
         this.loke = new Loke(configuration, athenaClient);
         loke.setEmailSender(emailSender);
@@ -74,6 +75,26 @@ public class LokeIT {
         QueryResult queryResult = new QueryResult();
         queryResult.setResultList(new ArrayList());
         when(athenaClient.executeQuery(anyString(), (Class<Object>) any())).thenReturn(queryResult);
+    }
+
+    @Test
+    public void sendOnlyAdminReportTrue_onlySendsReportToAdmin() throws Exception {
+        // given
+        configuration.setSendOnlyAdminReport(true);
+
+        QueryResult queryResult = new QueryResult();
+        queryResult.setResultList(createSpendPerEmployeeByAccountData());
+        when(athenaClient.executeQuery(EMPLOYEE_BY_ACCOUNT_SQL, SpendPerEmployeeAndAccountDao.class)).thenReturn(queryResult);
+
+        Loke loke = new Loke(configuration, athenaClient);
+        loke.setEmailSender(emailSender);
+
+        // when
+        loke.run();
+
+        // then
+        verify(emailSender, times(1)).sendAdminMails(anyList(), anyList());
+        verify(emailSender, times(0)).sendEmployeeMails(anyList());
     }
 
     @Test

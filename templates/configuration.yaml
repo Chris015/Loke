@@ -18,3 +18,4 @@ toEmailDomainName: '@yourdomain.com'
 admins: # A list of admin report recipients
   - admin-address@yourdomain.com
   - another-admin-address@yourdomain.com
+sendOnlyAdminReport: false

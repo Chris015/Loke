@@ -17,6 +17,17 @@ public class Configuration {
     private String toEmailDomainName;
     private double generateReportThreshold;
     private List<Admin> admins;
+    private boolean sendOnlyAdminReport;
+
+    public void setSendOnlyAdminReport(boolean sendOnlyAdminReport) {
+        this.sendOnlyAdminReport = sendOnlyAdminReport;
+    }
+
+
+    public boolean isSendOnlyAdminReport() {
+        return sendOnlyAdminReport;
+    }
+
 
     public boolean isDryRun() {
         return dryRun;
