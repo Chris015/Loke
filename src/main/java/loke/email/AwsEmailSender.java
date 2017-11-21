@@ -35,7 +35,7 @@ public class AwsEmailSender {
                 addHtmlTable(htmlBody, report);
             }
             if (dryRun) {
-                log.info("DryRun: Emails not sent to: {}", employee.getUserName());
+                log.info("DryRun: Email not sent to: {}", employee.getUserName());
                 log.trace("Email for {}: {}", employee.getUserName(), htmlBody.toString().trim());
                 return;
             }
