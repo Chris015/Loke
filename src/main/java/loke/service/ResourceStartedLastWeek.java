@@ -59,15 +59,17 @@ public class ResourceStartedLastWeek implements Service {
 
     private String generateHTMLTable(User user) {
         VelocityEngine velocityEngine = new VelocityEngine();
-        velocityEngine.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, "src/main/resources/templates/");
-        velocityEngine.init();
+        Properties p = new Properties();
+        p.setProperty("resource.loader", "class");
+        p.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+        velocityEngine.init(p);
 
         VelocityContext context = new VelocityContext();
         context.put("user", user);
         context.put("decimalFormatter", DecimalFormatter.class);
         context.put("dateFormat", new SimpleDateFormat("MMM dd, YYYY", Locale.US));
 
-        Template template = velocityEngine.getTemplate("resourcesstartedlastweek.vm");
+        Template template = velocityEngine.getTemplate("templates/resourcesstartedlastweek.vm");
 
         StringWriter stringWriter = new StringWriter();
         template.merge(context, stringWriter);
