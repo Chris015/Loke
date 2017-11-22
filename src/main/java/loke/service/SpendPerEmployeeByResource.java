@@ -71,8 +71,10 @@ public class SpendPerEmployeeByResource implements Service {
 
     private String generateHTMLTable(User user) {
         VelocityEngine velocityEngine = new VelocityEngine();
-        velocityEngine.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, "src/main/resources/templates/");
-        velocityEngine.init();
+        Properties p = new Properties();
+        p.setProperty("resource.loader", "class");
+        p.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+        velocityEngine.init(p);
 
         VelocityContext context = new VelocityContext();
         context.put("dates", daysBack);
@@ -82,7 +84,7 @@ public class SpendPerEmployeeByResource implements Service {
         context.put("dateFormat", this.dateFormat);
         context.put("decimalFormatter", DecimalFormatter.class);
 
-        Template template = velocityEngine.getTemplate("spendperemployeebyresource.vm");
+        Template template = velocityEngine.getTemplate("templates/spendperemployeebyresource.vm");
 
         StringWriter stringWriter = new StringWriter();
         template.merge(context, stringWriter);

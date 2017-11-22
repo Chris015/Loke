@@ -12,7 +12,7 @@ public class ScaleChecker {
     }
 
     public enum Scale {
-        BETWEEN_0_10("USD", 0.1, Arrays.asList(0,1,2,3,4,5,6,7,8,9,10)),
+        BETWEEN_0_10("USD", 0.1, Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
         BETWEEN_11_100("USD", 1, Arrays.asList(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100)),
         BETWEEN_101_1000("USD", 10, Arrays.asList(0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000)),
         BETWEEN_1001_INFINITY("USD", 100, Arrays.asList(0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000));
@@ -35,6 +35,8 @@ public class ScaleChecker {
             return divideBy;
         }
 
-        public List<Integer> getyAxisLabels() {return yAxisLabels;}
+        public List<Integer> getyAxisLabels() {
+            return yAxisLabels;
+        }
     }
 }

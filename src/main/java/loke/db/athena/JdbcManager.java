@@ -18,18 +18,21 @@ public class JdbcManager {
     private static final Logger log = LogManager.getLogger(JdbcManager.class);
     private String myUrl;
     private Properties myProps = new Properties();
+
     /**
      * Sets the JDBC url.
      */
     public void setUrl(String theUrl) {
         myUrl = theUrl;
     }
+
     /**
      * Setts additional JDBC connection properties.
      */
     public void setProperty(String theName, String theValue) {
         myProps.setProperty(theName, theValue);
     }
+
     /**
      * Executes a custom sql query to DB with callback support for resultset.
      */
@@ -44,33 +47,29 @@ public class JdbcManager {
             throw new SqlException("Failed to execute sql: " + theSql, e);
         }
     }
-    /**
-     * Callback interface for result sets.
-     */
-    public interface RsAction {
-        void onData(ResultSet theResultSet) throws Exception;
-    }
+
     /**
      * Executes a SQL query and populates a custom pojo with the result.
-     *
+     * <p>
      * E.g.
-     *
+     * <p>
      * public class ApaCount {
-     *     int count;
+     * int count;
      * }
-     *
+     * <p>
      * Apa anApa = executeQuery(“Select count(*) as count from Apa)
-     *     .getSingleResult();
-     *
+     * .getSingleResult();
+     * <p>
      * List<Apa> someApas = SqlService.getInstancce()
-     *     .executeQuery(true, “Select int as count from Apa)
-     *     .getResultList();
-     *
+     * .executeQuery(true, “Select int as count from Apa)
+     * .getResultList();
+     * <p>
      * The column names can also be annoted if different than field name. E.g.
-     *
+     * <p>
      * public class Apa {
-     *     @Column(value = “animal_name”)
-     *     string name;
+     *
+     * @Column(value = “animal_name”)
+     * string name;
      * }
      */
     public <T> QueryResult executeQuery(final String theSql, final Class<T> theResultClass) throws SqlException {
@@ -87,6 +86,7 @@ public class JdbcManager {
         });
         return aResult;
     }
+
     private <T> T getResultInstance(ResultSet theResultSet, final Class<T> theResultClass) throws Exception {
         T aPojo = theResultClass.newInstance();
         ResultSetMetaData aMeta = theResultSet.getMetaData();
@@ -103,18 +103,19 @@ public class JdbcManager {
             }
             aField.setAccessible(true);
             Class aFieldType = aField.getType();
-            if (aFieldType == String.class)            aField.set(aPojo, theResultSet.getString(i));    else
-            if (aFieldType == java.util.Date.class)    aField.set(aPojo, theResultSet.getTimestamp(i)); else
-            if (aFieldType == Integer.class)           aField.set(aPojo, theResultSet.getInt(i));       else
-            if (aFieldType == int.class)               aField.set(aPojo, theResultSet.getInt(i));       else
-            if (aFieldType == Long.class)              aField.set(aPojo, theResultSet.getLong(i));      else
-            if (aFieldType == long.class)              aField.set(aPojo, theResultSet.getLong(i));      else
-            if (aFieldType == Double.class)            aField.set(aPojo, theResultSet.getDouble(i));    else
-            if (aFieldType == double.class)            aField.set(aPojo, theResultSet.getDouble(i));    else
-            if (aFieldType == Boolean.class)           aField.set(aPojo, theResultSet.getBoolean(i));   else
-            if (aFieldType == boolean.class)           aField.set(aPojo, theResultSet.getBoolean(i));   else
-            if (aFieldType.isEnum())                   aField.set(aPojo, Enum.valueOf((Class<Enum>) aFieldType,
-                    theResultSet.getString(i))); else {
+            if (aFieldType == String.class) aField.set(aPojo, theResultSet.getString(i));
+            else if (aFieldType == java.util.Date.class) aField.set(aPojo, theResultSet.getTimestamp(i));
+            else if (aFieldType == Integer.class) aField.set(aPojo, theResultSet.getInt(i));
+            else if (aFieldType == int.class) aField.set(aPojo, theResultSet.getInt(i));
+            else if (aFieldType == Long.class) aField.set(aPojo, theResultSet.getLong(i));
+            else if (aFieldType == long.class) aField.set(aPojo, theResultSet.getLong(i));
+            else if (aFieldType == Double.class) aField.set(aPojo, theResultSet.getDouble(i));
+            else if (aFieldType == double.class) aField.set(aPojo, theResultSet.getDouble(i));
+            else if (aFieldType == Boolean.class) aField.set(aPojo, theResultSet.getBoolean(i));
+            else if (aFieldType == boolean.class) aField.set(aPojo, theResultSet.getBoolean(i));
+            else if (aFieldType.isEnum()) aField.set(aPojo, Enum.valueOf((Class<Enum>) aFieldType,
+                    theResultSet.getString(i)));
+            else {
                 throw new IllegalArgumentException("Field type "
                         + aField
                         + " is not supported yet, feel free to add it if you want...");
@@ -125,6 +126,7 @@ public class JdbcManager {
         }
         return aPojo;
     }
+
     private Field getField(Class theClass, String theName) {
         while (theClass != null) {
             try {
@@ -141,28 +143,14 @@ public class JdbcManager {
         }
         return null;
     }
-    /**
-     * Container for query results.
-     */
-    public static class QueryResult<T> {
-        private List<T> myRows = new ArrayList<>();
-        private void addRow(T theRow) {
-            myRows.add(theRow);
-        }
-        public T getSingleResult() {
-            if (myRows.isEmpty()) {
-                return null;
-            }
-            return myRows.get(0);
-        }
-        public List<T> getResultList() {
-            return myRows;
-        }
 
-        public void setResultList(List<T> myRows) {
-            this.myRows = myRows;
-        }
+    /**
+     * Callback interface for result sets.
+     */
+    public interface RsAction {
+        void onData(ResultSet theResultSet) throws Exception;
     }
+
     /**
      * Annotation interface for class fields to populate. Use this if field name differs from loke.db column name/label.
      */
@@ -171,10 +159,38 @@ public class JdbcManager {
     public @interface Column {
         String value();
     }
+
+    /**
+     * Container for query results.
+     */
+    public static class QueryResult<T> {
+        private List<T> myRows = new ArrayList<>();
+
+        private void addRow(T theRow) {
+            myRows.add(theRow);
+        }
+
+        public T getSingleResult() {
+            if (myRows.isEmpty()) {
+                return null;
+            }
+            return myRows.get(0);
+        }
+
+        public List<T> getResultList() {
+            return myRows;
+        }
+
+        public void setResultList(List<T> myRows) {
+            this.myRows = myRows;
+        }
+    }
+
     public static class SqlException extends RuntimeException {
         public SqlException(String theMessage) {
             super(theMessage);
         }
+
         public SqlException(String theMessage, Throwable theCause) {
             super(theMessage, theCause);
         }

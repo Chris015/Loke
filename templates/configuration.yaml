@@ -1,21 +1,21 @@
 dryRun: true # If true, no emails will be sent
 
 # Athena configuration
-accessKey: # Your access key
-secretAccessKey: # Your secret access key
-host: # Athena host. Ex. athena.eu-west-1.amazonaws.com
+accessKey:                # Your access key
+secretAccessKey:          # Your secret access key
+host:                     # Athena host. Ex. athena.eu-west-1.amazonaws.com
 port: 443
 stagingDir: s3://your-staging-dir
 
 # Keep things nice and tidy
 userOwnerRegExp: ^(?!.*excludethis|.*orexcludethis)([a-z]+\.[a-z]+)+$ # RegExp for matching on Owner tag
-generateReportThreshold: 0 # A minimum value for accounts to be shown. Useful for keeping the account summary table relevant
+generateReportThreshold: 0 # Reports with a total cost below this threshold will not be generated
 
 # SES configuration
-region: # region used by AWS SES
-fromEmailAddress: billingreport@yourdomain.com
+sendOnlyAdminReport: false
+region:            # region used by AWS SES
+fromEmailAddress:  billingreport@yourdomain.com
 toEmailDomainName: '@yourdomain.com'
-admins: # A list of admin report recipients
+admins:            # A list of admin report recipients
   - admin-address@yourdomain.com
   - another-admin-address@yourdomain.com
-sendOnlyAdminReport: false

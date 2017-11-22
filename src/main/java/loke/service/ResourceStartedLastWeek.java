@@ -17,9 +17,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAccessor;
-import java.time.temporal.TemporalUnit;
 import java.util.*;
 
 public class ResourceStartedLastWeek implements Service {
@@ -62,15 +59,17 @@ public class ResourceStartedLastWeek implements Service {
 
     private String generateHTMLTable(User user) {
         VelocityEngine velocityEngine = new VelocityEngine();
-        velocityEngine.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, "src/main/resources/templates/");
-        velocityEngine.init();
+        Properties p = new Properties();
+        p.setProperty("resource.loader", "class");
+        p.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+        velocityEngine.init(p);
 
         VelocityContext context = new VelocityContext();
         context.put("user", user);
         context.put("decimalFormatter", DecimalFormatter.class);
         context.put("dateFormat", new SimpleDateFormat("MMM dd, YYYY", Locale.US));
 
-        Template template = velocityEngine.getTemplate("resourcesstartedlastweek.vm");
+        Template template = velocityEngine.getTemplate("templates/resourcesstartedlastweek.vm");
 
         StringWriter stringWriter = new StringWriter();
         template.merge(context, stringWriter);
@@ -137,12 +136,12 @@ public class ResourceStartedLastWeek implements Service {
         }
 
         public double calculateTotalSpend() {
-        double total = 0;
-        for (Resource resource : resources) {
-            total += resource.getCost();
+            double total = 0;
+            for (Resource resource : resources) {
+                total += resource.getCost();
+            }
+            return total;
         }
-        return total;
-    }
 
         public String getUserName() {
             return userName;
