@@ -99,8 +99,8 @@ public class Loke {
         if(configuration.isSendOnlyAdminReport()){
             adminReports = costReportGenerator.generateAdminReports();
         } else {
-            adminReports = costReportGenerator.generateAdminReports();
             employeeReports = costReportGenerator.generateReports();
+            adminReports = costReportGenerator.generateAdminReports();
         }
 
         if(employeeReports != null && employeeReports.size() > 0) {
