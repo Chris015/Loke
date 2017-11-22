@@ -17,7 +17,7 @@ FROM wsbillingreports.billingreport
 WHERE usage_start_date != ''
 AND usage_start_date != 'UsageStartDate'
 AND usage_start_date != 'usage_start_date'
-AND CAST(date_parse(usage_start_date, '%Y-%m-%d %T') AS DATE) < (CURRENT_DATE - INTERVAL '30' DAY)
+AND CAST(date_parse(usage_start_date, '%Y-%m-%d %T') AS DATE) < (CURRENT_DATE - INTERVAL '7' DAY)
 )
 GROUP BY linked_account_id, user_owner, product_name, resource_id
 ORDER BY linked_account_id, user_owner, product_name, resource_id ASC;
