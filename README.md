@@ -190,5 +190,6 @@ java -Dlog4j.configurationFile="log4j2.xml" -jar loke-1.0-SNAPSHOT-shaded.jar
 
 ## Authors
 
-* **Christopher Olsson** [GitHub](https://github.com/Chris015)
-* **Markus Averheim** [GitHub](https://github.com/Averheim)
+* [**Christopher Olsson**](https://github.com/Chris015)
+* [**Markus Averheim**](https://github.com/averheim) 
+
