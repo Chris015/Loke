@@ -65,6 +65,7 @@ blended_cost string,
 un_blended_rate string,
 un_blended_cost string,
 resource_id string,
+aws_created_by string,
 user_application string,
 user_component string,
 user_name string,
@@ -76,7 +77,7 @@ WITH SERDEPROPERTIES (
   'serialization.format' = ',',
   'quoteChar' = '"',
   'field.delim' = ','
-) LOCATION 's3://<BUCKET-NAME>/'
+) LOCATION '<BUCKET-NAME>'
 TBLPROPERTIES ('has_encrypted_data'='false');
 ```
 Note that Amazon sometimes change their billing csv's. Revisit if needed.
@@ -129,7 +130,8 @@ The following 3 policies grants the minimum permissions for Loke to run.
             "Effect": "Allow",
             "Action": [
                 "s3:List*",
-                "s3:Get*"
+                "s3:Get*",
+                "s3:Put*"
             ],
             "Resource": [
                 "arn:aws:s3:::<BILLING-BUCKET-NAME>/*",
