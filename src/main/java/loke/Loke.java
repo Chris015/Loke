@@ -2,6 +2,9 @@ package loke;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
 import loke.config.AccountReader;
 import loke.config.Configuration;
@@ -26,6 +29,8 @@ public class Loke {
     private AccountReader accountReader;
     private CostReportGenerator costReportGenerator;
     private AwsEmailSender emailSender;
+    private ZipUncompress zipUncompress;
+    private S3Handler s3Handler;
 
     public Loke() {
         this.configuration = new YamlReader().readConfigFile("configuration.yaml");
@@ -52,6 +57,18 @@ public class Loke {
     }
 
     private void setup() {
+        BasicAWSCredentials credentials =
+                new BasicAWSCredentials(configuration.getAccessKey(), configuration.getSecretAccessKey());
+
+        AmazonS3 amazonS3 = AmazonS3ClientBuilder.standard()
+                .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                .withRegion(Regions.fromName(configuration.getRegion()))
+                .build();
+
+        this.s3Handler = new S3Handler(amazonS3);
+
+        this.zipUncompress = new ZipUncompress(s3Handler);
+
         this.accountReader = new AccountReader();
         Map<String, String> csvAccounts = readAccountsCsv("accounts.csv");
 
@@ -96,14 +113,14 @@ public class Loke {
         List<Employee> employeeReports = null;
         List<Employee> adminReports;
 
-        if(configuration.isSendOnlyAdminReport()){
+        if (configuration.isSendOnlyAdminReport()) {
             adminReports = costReportGenerator.generateAdminReports();
         } else {
             employeeReports = costReportGenerator.generateReports();
             adminReports = costReportGenerator.generateAdminReports();
         }
 
-        if(employeeReports != null && employeeReports.size() > 0) {
+        if (employeeReports != null && employeeReports.size() > 0) {
             emailSender.sendEmployeeMails(employeeReports);
         }
 
