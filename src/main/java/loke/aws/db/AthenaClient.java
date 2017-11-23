@@ -1,4 +1,4 @@
-package loke.db.athena;
+package loke.aws.db;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,7 +10,7 @@ public class AthenaClient extends JdbcManager {
                         String theStagingDir) {
         try {
             log.info("Initiate the Athena driver: {}, {}, {}, {}", theHost, thePort, theAwsAccessKey, theStagingDir);
-            // Register athena driver
+            // Register db driver
             Class.forName("com.amazonaws.athena.jdbc.AthenaDriver");
             // Default port is 443
             if (thePort == null) {

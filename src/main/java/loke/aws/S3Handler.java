@@ -1,10 +1,11 @@
-package loke;
+package loke.aws;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -66,13 +67,14 @@ public class S3Handler {
         }
     }
 
-    public void uploadFile(String bucket, String key, String file) {
+    public void uploadFile(String bucket, String key, String filePath) {
+        File file = new File(filePath);
         PutObjectRequest request = new PutObjectRequest(bucket, key, file);
         try {
             s3.putObject(request);
             log.info("File uploaded.\nFile: {}\nBucket: {}\nKey: {}", file, bucket, key);
         } catch (Exception e) {
-            log.info("Failed to upload file: {}\nError: ", file, e.getMessage());
+            log.info("Failed to upload file: {}\nError: {}", file, e.getMessage());
         }
     }
 }

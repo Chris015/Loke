@@ -1,7 +1,7 @@
 package loke.service;
 
-import loke.db.athena.AthenaClient;
-import loke.db.athena.JdbcManager;
+import loke.aws.db.AthenaClient;
+import loke.aws.db.JdbcManager;
 import loke.model.Report;
 import loke.utils.DecimalFormatter;
 import loke.utils.ResourceLoader;
@@ -10,7 +10,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.runtime.RuntimeConstants;
 
 import java.io.StringWriter;
 import java.text.ParseException;

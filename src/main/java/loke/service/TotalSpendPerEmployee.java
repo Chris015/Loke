@@ -1,8 +1,8 @@
 package loke.service;
 
 import com.googlecode.charts4j.*;
-import loke.db.athena.AthenaClient;
-import loke.db.athena.JdbcManager;
+import loke.aws.db.AthenaClient;
+import loke.aws.db.JdbcManager;
 import loke.model.Report;
 import loke.model.TotalReport;
 import loke.utils.*;

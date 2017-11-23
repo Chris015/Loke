@@ -6,14 +6,16 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
+import loke.aws.S3Handler;
 import loke.config.AccountReader;
 import loke.config.Configuration;
 import loke.config.MalformedCSVException;
 import loke.config.YamlReader;
-import loke.db.athena.AthenaClient;
+import loke.aws.db.AthenaClient;
 import loke.email.AwsEmailSender;
 import loke.email.AwsSesHandler;
 import loke.model.Employee;
+import loke.utils.ZipToGzUtility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,8 +31,7 @@ public class Loke {
     private AccountReader accountReader;
     private CostReportGenerator costReportGenerator;
     private AwsEmailSender emailSender;
-    private ZipUncompress zipUncompress;
-    private S3Handler s3Handler;
+    private S3ZipToGzConverter s3ZipToGzConverter;
 
     public Loke() {
         this.configuration = new YamlReader().readConfigFile("configuration.yaml");
@@ -65,9 +66,7 @@ public class Loke {
                 .withRegion(Regions.fromName(configuration.getRegion()))
                 .build();
 
-        this.s3Handler = new S3Handler(amazonS3);
-
-        this.zipUncompress = new ZipUncompress(s3Handler);
+        this.s3ZipToGzConverter = new S3ZipToGzConverter(new S3Handler(amazonS3), new ZipToGzUtility());
 
         this.accountReader = new AccountReader();
         Map<String, String> csvAccounts = readAccountsCsv("accounts.csv");
@@ -110,6 +109,10 @@ public class Loke {
 
     public void run() {
 
+        s3ZipToGzConverter.convertZipToGz(configuration.getZipFileSourceBucket(), configuration.getGzFileDestinationBucket());
+
+
+
         List<Employee> employeeReports = null;
         List<Employee> adminReports;
 
@@ -131,6 +134,7 @@ public class Loke {
         } catch (Exception e) {
             log.info(e);
         }
+
     }
 
     public void setEmailSender(AwsEmailSender emailSender) {
