@@ -1,5 +1,9 @@
 dryRun: true # If true, no emails will be sent
 
+# Source and destination for .zip to .gz conversion
+zipFileSourceBucket: # Bucket holding your .zip billing logs
+gzFileDestinationBucket: # Bucket to place your .gz billing logs
+
 # Athena configuration
 accessKey:                # Your access key
 secretAccessKey:          # Your secret access key
