@@ -1,25 +1,25 @@
-dryRun: true # If true, no emails will be sent
+dryRun:                   true # If true, no emails will be sent
 
 # Source and destination for .zip to .gz conversion
-zipFileSourceBucket: # Bucket holding your .zip billing logs
-gzFileDestinationBucket: # Bucket to place your .gz billing logs
+zipFileSourceBucket:      # Bucket holding your .zip billing logs
+gzFileDestinationBucket:  # Bucket to place your .gz billing logs
 
 # Athena configuration
 accessKey:                # Your access key
 secretAccessKey:          # Your secret access key
 host:                     # Athena host. Ex. athena.eu-west-1.amazonaws.com
-port: 443
-stagingDir: s3://your-staging-dir
+port:                     443
+stagingDir:               s3://your-staging-dir
 
 # Keep things nice and tidy
-userOwnerRegExp: ^.*$     # RegExp for matching on Owner tag
-generateReportThreshold: 0 # Reports with a total cost below this threshold will not be generated
+userOwnerRegExp:          ^.*$     # RegExp for matching on Owner tag
+generateReportThreshold:  0 # Reports with a total cost below this threshold will not be generated
 
 # SES configuration
-sendOnlyAdminReport: false
-region:            # region used by AWS SES
-fromEmailAddress:  billingreport@yourdomain.com
-toEmailDomainName: '@yourdomain.com'
-admins:            # A list of admin report recipients
+sendOnlyAdminReport:      false
+region:                   # region used by AWS SES
+fromEmailAddress:         billingreport@yourdomain.com
+toEmailDomainName:        '@yourdomain.com'
+admins:                   # A list of admin report recipients
   - admin-address@yourdomain.com
   - another-admin-address@yourdomain.com
