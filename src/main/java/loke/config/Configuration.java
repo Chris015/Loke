@@ -18,6 +18,16 @@ public class Configuration {
     private double generateReportThreshold;
     private List<Admin> admins;
     private boolean sendOnlyAdminReport;
+    private String zipFileSourceBucket;
+    private String gzFileDestinationBucket;
+
+    public String getZipFileSourceBucket() {
+        return zipFileSourceBucket;
+    }
+
+    public String getGzFileDestinationBucket() {
+        return gzFileDestinationBucket;
+    }
 
     public void setSendOnlyAdminReport(boolean sendOnlyAdminReport) {
         this.sendOnlyAdminReport = sendOnlyAdminReport;

@@ -1,10 +1,11 @@
-package loke;
+package loke.aws;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -12,6 +13,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class S3Handler {
     private static final Logger log = LogManager.getLogger(S3Handler.class);
@@ -35,17 +37,14 @@ public class S3Handler {
     }
 
     public S3ObjectSummary getLastModifiedFile(List<S3ObjectSummary> objectSummaries, String keyPattern) {
-        List<S3ObjectSummary> filteredSummeries = new ArrayList<>();
-        for (S3ObjectSummary summery : objectSummaries) {
-            if (summery.getKey().matches(keyPattern)) {
-                filteredSummeries.add(summery);
-            }
-        }
+        List<S3ObjectSummary> filteredSummaries = objectSummaries.stream()
+                .filter(s -> s.getKey().matches(keyPattern))
+                .collect(Collectors.toList());
 
-        filteredSummeries.sort(Comparator.comparing(S3ObjectSummary::getLastModified));
+        filteredSummaries.sort(Comparator.comparing(S3ObjectSummary::getLastModified));
 
-        int lastItem = filteredSummeries.size() - 1;
-        return filteredSummeries.get(lastItem);
+        int lastItem = filteredSummaries.size() - 1;
+        return filteredSummaries.get(lastItem);
     }
 
     public void downloadFile(S3ObjectSummary lastModifiedFile, String destination) {
@@ -66,13 +65,14 @@ public class S3Handler {
         }
     }
 
-    public void uploadFile(String bucket, String key, String file) {
+    public void uploadFile(String bucket, String key, String filePath) {
+        File file = new File(filePath);
         PutObjectRequest request = new PutObjectRequest(bucket, key, file);
         try {
             s3.putObject(request);
             log.info("File uploaded.\nFile: {}\nBucket: {}\nKey: {}", file, bucket, key);
         } catch (Exception e) {
-            log.info("Failed to upload file: {}\nError: ", file, e.getMessage());
+            log.info("Failed to upload file: {}\nError: {}", file, e.getMessage());
         }
     }
 }

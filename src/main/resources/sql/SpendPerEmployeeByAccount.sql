@@ -11,7 +11,7 @@ AND blended_cost != 'blended_cost'
 AND blended_cost != '0.0000000000'
 AND usage_start_date != ''
 AND usage_start_date != 'UsageStartDate'
-AND usage_start_date != 'usage_start_date'
+AND user_owner != 'user:Owner'
 AND user_owner != ''
 AND CAST (date_parse(usage_start_date, '%Y-%m-%d %T') AS DATE ) > ( CURRENT_DATE - INTERVAL '30' DAY )
 GROUP BY user_owner, linked_account_id, product_name, CAST (date_parse(usage_start_date, '%Y-%m-%d %T') AS DATE )

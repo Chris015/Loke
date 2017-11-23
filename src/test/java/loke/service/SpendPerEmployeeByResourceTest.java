@@ -1,7 +1,7 @@
 package loke.service;
 
-import loke.db.athena.AthenaClient;
-import loke.db.athena.JdbcManager.QueryResult;
+import loke.aws.db.AthenaClient;
+import loke.aws.db.JdbcManager.QueryResult;
 import loke.service.SpendPerEmployeeByResource.SpendPerEmployeeByResourceDao;
 import loke.utils.CalendarGenerator;
 import loke.utils.ResourceLoader;

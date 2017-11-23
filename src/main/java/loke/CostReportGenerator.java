@@ -1,6 +1,6 @@
 package loke;
 
-import loke.db.athena.AthenaClient;
+import loke.aws.db.AthenaClient;
 import loke.model.Employee;
 import loke.model.Report;
 import loke.service.*;

@@ -1,7 +1,7 @@
 package loke;
 
 import loke.config.Configuration;
-import loke.db.athena.AthenaClient;
+import loke.aws.db.AthenaClient;
 import loke.email.AwsEmailSender;
 import loke.email.AwsSesHandler;
 import loke.model.Admin;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static loke.db.athena.JdbcManager.QueryResult;
+import static loke.aws.db.JdbcManager.QueryResult;
 import static loke.service.ResourceStartedLastWeek.ResourceStartedLastWeekDao;
 import static loke.service.SpendPerEmployeeByAccount.SpendPerEmployeeAndAccountDao;
 import static loke.service.SpendPerEmployeeByResource.SpendPerEmployeeByResourceDao;
@@ -71,7 +71,7 @@ public class LokeIT {
         this.loke = new Loke(configuration, athenaClient);
         loke.setEmailSender(emailSender);
 
-        // If not otherwise specified in the test, the db client will always return an empty list
+        // If not otherwise specified in the test, the aws client will always return an empty list
         QueryResult queryResult = new QueryResult();
         queryResult.setResultList(new ArrayList());
         when(athenaClient.executeQuery(anyString(), (Class<Object>) any())).thenReturn(queryResult);

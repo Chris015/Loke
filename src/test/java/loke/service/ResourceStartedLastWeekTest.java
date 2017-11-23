@@ -1,6 +1,6 @@
 package loke.service;
 
-import loke.db.athena.AthenaClient;
+import loke.aws.db.AthenaClient;
 import loke.utils.ResourceLoader;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static loke.db.athena.JdbcManager.QueryResult;
+import static loke.aws.db.JdbcManager.QueryResult;
 import static loke.service.ResourceStartedLastWeek.ResourceStartedLastWeekDao;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
