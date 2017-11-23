@@ -3,6 +3,7 @@ package loke.service;
 import loke.aws.db.AthenaClient;
 import loke.utils.CalendarGenerator;
 import loke.utils.ResourceLoader;
+import loke.utils.SqlConfigInjector;
 import org.junit.Before;
 import org.junit.Test;
 import testutilities.ResourceLoaderTestUtility;
@@ -20,7 +21,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class SpendPerEmployeeByAccountTest {
-    private static final String SQL_QUERY = ResourceLoader.getResource("sql/SpendPerEmployeeByAccount.sql");
+    private String sqlQuery;
     private AthenaClient athenaClient;
     private SpendPerEmployeeByAccount spendPerEmployeeByAccount;
     private Clock clock;
@@ -32,7 +33,9 @@ public class SpendPerEmployeeByAccountTest {
         when(clock.instant()).thenReturn(Instant.parse("2017-09-30T00:00:00Z"));
         athenaClient = mock(AthenaClient.class);
         String userOwnerRegExp = "john.doe";
-        spendPerEmployeeByAccount = new SpendPerEmployeeByAccount(athenaClient, userOwnerRegExp, 0, new HashMap<>(), null);
+        SqlConfigInjector sqlConfigInjector = new SqlConfigInjector("database", "table");
+        this.sqlQuery = sqlConfigInjector.injectSqlConfig(ResourceLoader.getResource("sql/SpendPerEmployeeByAccount.sql"));
+        spendPerEmployeeByAccount = new SpendPerEmployeeByAccount(athenaClient, userOwnerRegExp, 0, new HashMap<>(), sqlConfigInjector);
     }
 
     @Test
@@ -46,7 +49,7 @@ public class SpendPerEmployeeByAccountTest {
         QueryResult queryResult = new QueryResult();
         queryResult.setResultList(spendPerEmployeeAndAccountDaos);
 
-        when(athenaClient.executeQuery(SQL_QUERY, SpendPerEmployeeAndAccountDao.class)).thenReturn(queryResult);
+        when(athenaClient.executeQuery(sqlQuery, SpendPerEmployeeAndAccountDao.class)).thenReturn(queryResult);
 
         String expected = ResourceLoaderTestUtility.loadResource("htmltables/SpendPerUserAndAccountTestTable.html");
         String result = spendPerEmployeeByAccount.getReports().get(0).getHtmlTable();

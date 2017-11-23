@@ -109,7 +109,15 @@ public class Configuration {
         return sqlDatabaseName;
     }
 
+    public void setSqlDatabaseName(String sqlDatabaseName) {
+        this.sqlDatabaseName = sqlDatabaseName;
+    }
+
     public String getSqlTableName() {
         return sqlTableName;
+    }
+
+    public void setSqlTableName(String sqlTableName) {
+        this.sqlTableName = sqlTableName;
     }
 }

@@ -2,6 +2,7 @@ package loke.service;
 
 import loke.aws.db.AthenaClient;
 import loke.utils.ResourceLoader;
+import loke.utils.SqlConfigInjector;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -17,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
 public class ResourceStartedLastWeekTest {
-    private static final String SQL_QUERY = ResourceLoader.getResource("sql/ResourceStartedLastWeek.sql");
+    private String sqlQuery;
     private AthenaClient athenaClient;
     private ResourceStartedLastWeek resourceStartedLastWeek;
 
@@ -25,7 +26,9 @@ public class ResourceStartedLastWeekTest {
     public void setUp() throws Exception {
         athenaClient = mock(AthenaClient.class);
         String userOwnerRegExp = "john.doe";
-        resourceStartedLastWeek = new ResourceStartedLastWeek(athenaClient, userOwnerRegExp, new HashMap<>(), null);
+        SqlConfigInjector sqlConfigInjector = new SqlConfigInjector("database", "table");
+        this.sqlQuery = sqlConfigInjector.injectSqlConfig(ResourceLoader.getResource("sql/ResourceStartedLastWeek.sql"));
+        resourceStartedLastWeek = new ResourceStartedLastWeek(athenaClient, userOwnerRegExp, new HashMap<>(), sqlConfigInjector);
     }
 
     @Test
@@ -37,7 +40,7 @@ public class ResourceStartedLastWeekTest {
         QueryResult queryResult = new QueryResult();
         queryResult.setResultList(resultList);
 
-        Mockito.when(athenaClient.executeQuery(SQL_QUERY, ResourceStartedLastWeekDao.class)).thenReturn(queryResult);
+        Mockito.when(athenaClient.executeQuery(sqlQuery, ResourceStartedLastWeekDao.class)).thenReturn(queryResult);
 
         String expected = ResourceLoaderTestUtility.loadResource("htmltables/ResourceStartedLastWeekTestTable.html");
         String result = resourceStartedLastWeek.getReports().get(0).getHtmlTable();

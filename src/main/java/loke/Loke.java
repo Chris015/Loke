@@ -43,22 +43,6 @@ public class Loke {
                 configuration.getSecretAccessKey(),
                 configuration.getStagingDir());
 
-        setup();
-    }
-
-    /**
-     * Used for injecting mocks when testing.
-     *
-     * @param configuration
-     * @param athenaClient
-     */
-    public Loke(Configuration configuration, AthenaClient athenaClient) {
-        this.configuration = configuration;
-        this.athenaClient = athenaClient;
-        setup();
-    }
-
-    private void setup() {
         BasicAWSCredentials credentials =
                 new BasicAWSCredentials(configuration.getAccessKey(), configuration.getSecretAccessKey());
 
@@ -68,7 +52,23 @@ public class Loke {
                 .build();
 
         this.s3ZipToGzConverter = new S3ZipToGzConverter(new S3Handler(amazonS3), new ZipToGzUtility());
+        setup();
+    }
 
+    /**
+     * Used for injecting mocks when testing.
+     *
+     * @param configuration
+     * @param athenaClient
+     */
+    public Loke(Configuration configuration, AthenaClient athenaClient, S3ZipToGzConverter s3ZipToGzConverter) {
+        this.configuration = configuration;
+        this.athenaClient = athenaClient;
+        this.s3ZipToGzConverter = s3ZipToGzConverter;
+        setup();
+    }
+
+    private void setup() {
         this.accountReader = new AccountReader();
         Map<String, String> csvAccounts = readAccountsCsv("accounts.csv");
 

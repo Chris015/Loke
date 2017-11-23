@@ -1,15 +1,17 @@
 package loke;
 
-import loke.config.Configuration;
 import loke.aws.db.AthenaClient;
+import loke.config.Configuration;
 import loke.email.AwsEmailSender;
 import loke.email.AwsSesHandler;
 import loke.model.Admin;
 import loke.utils.CalendarGenerator;
 import loke.utils.ResourceLoader;
+import loke.utils.SqlConfigInjector;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -28,10 +30,11 @@ import static org.mockito.Mockito.*;
 
 public class LokeIT {
 
-    private static final String EMPLOYEE_BY_ACCOUNT_SQL = loadSql("SpendPerEmployeeByAccount.sql");
-    private static final String LAST_WEEK_SQL = loadSql("ResourceStartedLastWeek.sql");
-    private static final String EMPLOYEE_BY_RESOURCE_SQL = loadSql("SpendPerEmployeeByResource.sql");
-    private static final String TOTAL_SPEND_SQL = loadSql("TotalSpendPerEmployee.sql");
+    private static final SqlConfigInjector sqlConfigInjector = new SqlConfigInjector("database", "table");
+    private static final String EMPLOYEE_BY_ACCOUNT_SQL = sqlConfigInjector.injectSqlConfig(loadSql("SpendPerEmployeeByAccount.sql"));
+    private static final String LAST_WEEK_SQL = sqlConfigInjector.injectSqlConfig(loadSql("ResourceStartedLastWeek.sql"));
+    private static final String EMPLOYEE_BY_RESOURCE_SQL = sqlConfigInjector.injectSqlConfig(loadSql("SpendPerEmployeeByResource.sql"));
+    private static final String TOTAL_SPEND_SQL = sqlConfigInjector.injectSqlConfig(loadSql("TotalSpendPerEmployee.sql"));
     private static final String SENDER = "sender@sender.com";
 
     private Loke loke;
@@ -67,8 +70,10 @@ public class LokeIT {
         configuration.setSecretAccessKey("");
         configuration.setUserOwnerRegExp("^([a-z]+\\.[a-z]+)+$");
         configuration.setSendOnlyAdminReport(false);
+        configuration.setSqlDatabaseName("database");
+        configuration.setSqlTableName("table");
 
-        this.loke = new Loke(configuration, athenaClient);
+        this.loke = new Loke(configuration, athenaClient, Mockito.mock(S3ZipToGzConverter.class));
         loke.setEmailSender(emailSender);
 
         // If not otherwise specified in the test, the aws client will always return an empty list
@@ -86,7 +91,7 @@ public class LokeIT {
         queryResult.setResultList(createSpendPerEmployeeByAccountData());
         when(athenaClient.executeQuery(EMPLOYEE_BY_ACCOUNT_SQL, SpendPerEmployeeAndAccountDao.class)).thenReturn(queryResult);
 
-        Loke loke = new Loke(configuration, athenaClient);
+        Loke loke = new Loke(configuration, athenaClient, Mockito.mock(S3ZipToGzConverter.class));
         loke.setEmailSender(emailSender);
 
         // when
