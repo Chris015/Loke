@@ -4,6 +4,7 @@ import loke.aws.db.AthenaClient;
 import loke.model.Employee;
 import loke.model.Report;
 import loke.service.*;
+import loke.utils.SqlConfigInjector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,20 +16,22 @@ public class CostReportGenerator {
     private Logger log = LogManager.getLogger(CostReportGenerator.class);
     private List<Service> employeeServices;
     private List<Service> adminServices;
+    private SqlConfigInjector configInjector;
 
-    public CostReportGenerator(AthenaClient athenaClient, String userOwnerRegExp,
-                               double generateReportThreshold, Map<String, String> csvAccounts) {
+    public CostReportGenerator(AthenaClient athenaClient, String userOwnerRegExp, double generateReportThreshold,
+                               Map<String, String> csvAccounts, SqlConfigInjector configInjector) {
         this.employeeServices = new ArrayList<>();
         this.adminServices = new ArrayList<>();
+        this.configInjector = configInjector;
 
         TotalSpendPerEmployee totalSpendPerEmployee =
-                new TotalSpendPerEmployee(athenaClient, userOwnerRegExp, generateReportThreshold);
+                new TotalSpendPerEmployee(athenaClient, userOwnerRegExp, generateReportThreshold, configInjector);
         SpendPerEmployeeByResource spendPerEmployeeByResource =
-                new SpendPerEmployeeByResource(athenaClient, userOwnerRegExp, generateReportThreshold);
+                new SpendPerEmployeeByResource(athenaClient, userOwnerRegExp, generateReportThreshold, configInjector);
         SpendPerEmployeeByAccount spendPerEmployeeByAccount =
-                new SpendPerEmployeeByAccount(athenaClient, userOwnerRegExp, generateReportThreshold, csvAccounts);
+                new SpendPerEmployeeByAccount(athenaClient, userOwnerRegExp, generateReportThreshold, csvAccounts, configInjector);
         ResourceStartedLastWeek resourceStartedLastWeek =
-                new ResourceStartedLastWeek(athenaClient, userOwnerRegExp, csvAccounts);
+                new ResourceStartedLastWeek(athenaClient, userOwnerRegExp, csvAccounts, configInjector);
 
         this.employeeServices.add(spendPerEmployeeByResource);
         this.employeeServices.add(spendPerEmployeeByAccount);

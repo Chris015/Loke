@@ -32,7 +32,7 @@ public class SpendPerEmployeeByAccountTest {
         when(clock.instant()).thenReturn(Instant.parse("2017-09-30T00:00:00Z"));
         athenaClient = mock(AthenaClient.class);
         String userOwnerRegExp = "john.doe";
-        spendPerEmployeeByAccount = new SpendPerEmployeeByAccount(athenaClient, userOwnerRegExp, 0, new HashMap<>());
+        spendPerEmployeeByAccount = new SpendPerEmployeeByAccount(athenaClient, userOwnerRegExp, 0, new HashMap<>(), null);
     }
 
     @Test

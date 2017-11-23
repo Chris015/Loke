@@ -6,14 +6,14 @@ SELECT
   resource_id,
   MIN(usage_start_date)             AS start_date,
   sum(cast(blended_cost AS DOUBLE)) AS cost
-FROM wsbillingreports.billingreport
+FROM databasename.tablename
   WHERE blended_cost != 'BlendedCost'
 AND user_owner != 'user:Owner'
 AND user_owner != ''
 AND resource_id NOT IN
 (
 SELECT DISTINCT resource_id
-FROM wsbillingreports.billingreport
+FROM databasename.tablename
 WHERE usage_start_date != ''
 AND usage_start_date != 'UsageStartDate'
 AND user_owner != 'user:Owner'

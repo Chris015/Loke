@@ -15,6 +15,7 @@ import loke.aws.db.AthenaClient;
 import loke.email.AwsEmailSender;
 import loke.email.AwsSesHandler;
 import loke.model.Employee;
+import loke.utils.SqlConfigInjector;
 import loke.utils.ZipToGzUtility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -74,7 +75,8 @@ public class Loke {
         this.costReportGenerator = new CostReportGenerator(athenaClient,
                 configuration.getUserOwnerRegExp(),
                 configuration.getGenerateReportThreshold(),
-                csvAccounts);
+                csvAccounts,
+                new SqlConfigInjector(configuration.getSqlDatabaseName(), configuration.getSqlTableName()));
 
         AwsSesHandler awsSesHandler = new AwsSesHandler(AmazonSimpleEmailServiceClientBuilder.standard()
                 .withRegion(configuration.getRegion())

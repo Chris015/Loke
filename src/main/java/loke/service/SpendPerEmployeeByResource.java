@@ -18,8 +18,7 @@ import java.util.*;
 
 public class SpendPerEmployeeByResource implements Service {
     private static final Logger log = LogManager.getLogger(SpendPerEmployeeByResource.class);
-    private static final String SQL_QUERY =
-            ResourceLoader.getResource("sql/SpendPerEmployeeByResource.sql");
+    private String sqlQuery;
     private List<Calendar> daysBack = CalendarGenerator.getDaysBack(30);
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private AthenaClient athenaClient;
@@ -27,10 +26,11 @@ public class SpendPerEmployeeByResource implements Service {
     private double generateReportThreshold;
 
     public SpendPerEmployeeByResource(AthenaClient athenaClient, String userOwnerRegExp,
-                                      double generateReportThreshold) {
+                                      double generateReportThreshold, SqlConfigInjector configInjector) {
         this.athenaClient = athenaClient;
         this.userOwnerRegExp = userOwnerRegExp;
         this.generateReportThreshold = generateReportThreshold;
+        this.sqlQuery = configInjector.injectSqlConfig(ResourceLoader.getResource("sql/SpendPerEmployeeByResource.sql"));
     }
 
     @Override
@@ -184,7 +184,7 @@ public class SpendPerEmployeeByResource implements Service {
         log.trace("Fetching data and mapping objects");
         Map<String, User> users = new HashMap<>();
         JdbcManager.QueryResult<SpendPerEmployeeByResourceDao> queryResult =
-                athenaClient.executeQuery(SQL_QUERY, SpendPerEmployeeByResourceDao.class);
+                athenaClient.executeQuery(sqlQuery, SpendPerEmployeeByResourceDao.class);
         for (SpendPerEmployeeByResourceDao dao : queryResult.getResultList()) {
             if (!dao.userOwner.matches(userOwnerRegExp)) {
                 continue;

@@ -25,7 +25,7 @@ public class ResourceStartedLastWeekTest {
     public void setUp() throws Exception {
         athenaClient = mock(AthenaClient.class);
         String userOwnerRegExp = "john.doe";
-        resourceStartedLastWeek = new ResourceStartedLastWeek(athenaClient, userOwnerRegExp, new HashMap<>());
+        resourceStartedLastWeek = new ResourceStartedLastWeek(athenaClient, userOwnerRegExp, new HashMap<>(), null);
     }
 
     @Test

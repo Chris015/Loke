@@ -5,6 +5,7 @@ import loke.aws.db.JdbcManager;
 import loke.model.Report;
 import loke.utils.DecimalFormatter;
 import loke.utils.ResourceLoader;
+import loke.utils.SqlConfigInjector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.velocity.Template;
@@ -20,17 +21,19 @@ import java.util.*;
 
 public class ResourceStartedLastWeek implements Service {
     private static final Logger log = LogManager.getLogger(ResourceStartedLastWeek.class);
-    private static final String SQL_QUERY =
-            ResourceLoader.getResource("sql/ResourceStartedLastWeek.sql");
+    private String sqlQuery;
     private AthenaClient jdbcClient;
     private String userOwnerRegExp;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private Map<String, String> csvAccounts;
 
-    public ResourceStartedLastWeek(AthenaClient athenaClient, String userOwnerRegExp, Map<String, String> csvAccounts) {
+    public ResourceStartedLastWeek(AthenaClient athenaClient, String userOwnerRegExp, Map<String, String> csvAccounts,
+                                   SqlConfigInjector configInjector) {
         this.jdbcClient = athenaClient;
         this.userOwnerRegExp = userOwnerRegExp;
         this.csvAccounts = csvAccounts;
+        this.sqlQuery = configInjector.injectSqlConfig(
+                ResourceLoader.getResource("sql/ResourceStartedLastWeek.sql"));
     }
 
     @Override
@@ -80,7 +83,7 @@ public class ResourceStartedLastWeek implements Service {
         log.trace("Fetching data and mapping objects");
         Map<String, User> users = new HashMap<>();
         JdbcManager.QueryResult<ResourceStartedLastWeekDao> queryResult =
-                jdbcClient.executeQuery(SQL_QUERY, ResourceStartedLastWeekDao.class);
+                jdbcClient.executeQuery(sqlQuery, ResourceStartedLastWeekDao.class);
         for (ResourceStartedLastWeekDao dao : queryResult.getResultList()) {
             if (!dao.userOwner.matches(userOwnerRegExp)) {
                 continue;

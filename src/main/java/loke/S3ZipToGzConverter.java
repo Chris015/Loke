@@ -38,7 +38,7 @@ public class S3ZipToGzConverter {
         }
 
         log.info("GzipFile: {}", gzipFile);
-        s3Handler.uploadFile(destinationBucket, gzipFile, tmpDir.getPath() + gzipFile);
+        s3Handler.uploadFile(destinationBucket, gzipFile, tmpDir.getPath() + '/' + gzipFile);
 
         try {
             FileUtils.cleanDirectory(tmpDir);

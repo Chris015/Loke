@@ -20,6 +20,8 @@ public class Configuration {
     private boolean sendOnlyAdminReport;
     private String zipFileSourceBucket;
     private String gzFileDestinationBucket;
+    private String sqlDatabaseName;
+    private String sqlTableName;
 
     public String getZipFileSourceBucket() {
         return zipFileSourceBucket;
@@ -101,5 +103,13 @@ public class Configuration {
 
     public void setAdmins(List<Admin> admins) {
         this.admins = admins;
+    }
+
+    public String getSqlDatabaseName() {
+        return sqlDatabaseName;
+    }
+
+    public String getSqlTableName() {
+        return sqlTableName;
     }
 }

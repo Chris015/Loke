@@ -11,6 +11,10 @@ host:                     # Athena host. Ex. athena.eu-west-1.amazonaws.com
 port:                     443
 stagingDir:               s3://your-staging-dir
 
+# Used by SQL
+sqlDatabaseName:          # Your database name
+sqlTableName:             # Your table name
+
 # Keep things nice and tidy
 userOwnerRegExp:          ^.*$     # RegExp for matching on Owner tag
 generateReportThreshold:  0 # Reports with a total cost below this threshold will not be generated
