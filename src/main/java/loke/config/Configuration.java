@@ -35,11 +35,9 @@ public class Configuration {
         this.sendOnlyAdminReport = sendOnlyAdminReport;
     }
 
-
     public boolean isSendOnlyAdminReport() {
         return sendOnlyAdminReport;
     }
-
 
     public boolean isDryRun() {
         return dryRun;
@@ -119,5 +117,9 @@ public class Configuration {
 
     public void setSqlTableName(String sqlTableName) {
         this.sqlTableName = sqlTableName;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
     }
 }

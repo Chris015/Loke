@@ -12,11 +12,30 @@ public class ColorPicker {
             GREEN,
             GRAY,
             AQUAMARINE,
-            ORANGE
-    };
-    private static int colorCounter = 0;
+            ORANGE,
+            BLACK,
+            CORAL,
+            DARKORANGE,
+            LAVENDER,
+            MAGENTA,
+            MAROON,
+            GOLDENROD,
+            ALICEBLUE,
+            BROWN,
+            DARKSALMON,
+            INDIGO,
+            LIGHTGREEN,
+            NAVY,
+            TOMATO,
+            PLUM,
+            DARKSLATEGRAY,
+            LIME,
+            OLIVE
 
-    public static Color getNextColor() {
+    };
+    private int colorCounter = 0;
+
+    public Color getNextColor() {
         Color color = COLORS[colorCounter];
         colorCounter++;
         if (isOutOfColors()) {
@@ -25,11 +44,11 @@ public class ColorPicker {
         return color;
     }
 
-    public static void resetColor() {
+    public void resetColor() {
         colorCounter = 0;
     }
 
-    private static boolean isOutOfColors() {
+    private boolean isOutOfColors() {
         return colorCounter == COLORS.length;
     }
 }

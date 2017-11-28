@@ -15,17 +15,20 @@ import java.util.*;
 
 public class TotalSpendPerEmployee implements Service {
     private static final Logger log = LogManager.getLogger(TotalSpendPerEmployee.class);
+    private AthenaClient athenaClient;
     private String sqlQuery;
     private List<Calendar> daysBack = CalendarGenerator.getDaysBack(30);
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private AthenaClient athenaClient;
+    private ColorPicker colorPicker;
     private String userOwnerRegExp;
     private double generateReportThreshold;
 
-    public TotalSpendPerEmployee(AthenaClient athenaClient, String userOwnerRegExp, double generateReportThreshold, SqlConfigInjector configInjector) {
+    public TotalSpendPerEmployee(AthenaClient athenaClient, String userOwnerRegExp, double generateReportThreshold,
+                                 ColorPicker colorPicker, SqlConfigInjector configInjector) {
         this.athenaClient = athenaClient;
         this.userOwnerRegExp = userOwnerRegExp;
         this.generateReportThreshold = generateReportThreshold;
+        this.colorPicker = colorPicker;
         this.sqlQuery = configInjector.injectSqlConfig(ResourceLoader.getResource("sql/TotalSpendPerEmployee.sql"));
     }
 
@@ -45,7 +48,7 @@ public class TotalSpendPerEmployee implements Service {
                         user.getUserName(), generateReportThreshold, user.calculateTotalCost());
                 continue;
             }
-            ColorPicker.resetColor();
+            colorPicker.resetColor();
             ScaleChecker.Scale scale = checkScale(user);
             List<String> xAxisLabels = getXAxisLabels();
             List<Line> lineChartPlots = createPlots(user, scale);
@@ -103,7 +106,7 @@ public class TotalSpendPerEmployee implements Service {
     private List<Line> createPlots(User user, ScaleChecker.Scale scale) {
         List<Line> plots = new ArrayList<>();
         List<Double> lineSizeValues = getLineSize(user, scale);
-        Line lineChartPlot = Plots.newLine(Data.newData(lineSizeValues), ColorPicker.getNextColor());
+        Line lineChartPlot = Plots.newLine(Data.newData(lineSizeValues), colorPicker.getNextColor());
         plots.add(0, lineChartPlot);
         return plots;
     }

@@ -72,6 +72,7 @@ public class LokeIT {
         configuration.setSendOnlyAdminReport(false);
         configuration.setSqlDatabaseName("database");
         configuration.setSqlTableName("table");
+        configuration.setRegion("eu-west-1");
 
         this.loke = new Loke(configuration, athenaClient, Mockito.mock(S3ZipToGzConverter.class));
         loke.setEmailSender(emailSender);

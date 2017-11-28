@@ -113,8 +113,6 @@ public class Loke {
 
         s3ZipToGzConverter.convertZipToGz(configuration.getZipFileSourceBucket(), configuration.getGzFileDestinationBucket());
 
-
-
         List<Employee> employeeReports = null;
         List<Employee> adminReports;
 

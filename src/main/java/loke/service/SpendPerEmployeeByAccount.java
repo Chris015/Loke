@@ -19,19 +19,21 @@ import java.util.*;
 public class SpendPerEmployeeByAccount implements Service {
     private static final Logger log = LogManager.getLogger(SpendPerEmployeeByAccount.class);
     private String sqlQuery;
+    private AthenaClient athenaClient;
     private List<Calendar> daysBack = CalendarGenerator.getDaysBack(30);
-    private AthenaClient jdbcClient;
+    private ColorPicker colorPicker;
     private String userOwnerRegExp;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private double generateReportThreshold;
     private Map<String, String> csvAccounts;
 
-    public SpendPerEmployeeByAccount(AthenaClient athenaClient, String userOwnerRegExp,
-                                     double generateReportThreshold, Map<String, String> csvAccounts, SqlConfigInjector configInjector) {
-        this.jdbcClient = athenaClient;
+    public SpendPerEmployeeByAccount(AthenaClient athenaClient, String userOwnerRegExp, double generateReportThreshold,
+                                     Map<String, String> csvAccounts, ColorPicker colorPicker, SqlConfigInjector configInjector) {
+        this.athenaClient = athenaClient;
         this.userOwnerRegExp = userOwnerRegExp;
         this.generateReportThreshold = generateReportThreshold;
         this.csvAccounts = csvAccounts;
+        this.colorPicker = colorPicker;
         this.sqlQuery = configInjector.injectSqlConfig(ResourceLoader.getResource("sql/SpendPerEmployeeByAccount.sql"));
     }
 
@@ -61,7 +63,7 @@ public class SpendPerEmployeeByAccount implements Service {
     }
 
     private String generateChartUrl(User user) {
-        ColorPicker.resetColor();
+        colorPicker.resetColor();
         ScaleChecker.Scale scale = checkScale(user.getAccounts().values());
         List<String> xAxisLabels = getXAxisLabels();
         List<Line> lineChartPlots = createPlots(user, scale);
@@ -126,7 +128,7 @@ public class SpendPerEmployeeByAccount implements Service {
             }
             Line lineChartPlot = Plots.newLine(
                     Data.newData(lineSizeValues),
-                    ColorPicker.getNextColor(),
+                    colorPicker.getNextColor(),
                     account.getAccountId()
                             + " "
                             + DecimalFormatter.format(account.getAccountTotal(), 2));
@@ -162,7 +164,7 @@ public class SpendPerEmployeeByAccount implements Service {
         log.trace("Fetching data and mapping objects");
         Map<String, User> users = new HashMap<>();
         JdbcManager.QueryResult<SpendPerEmployeeAndAccountDao> queryResult =
-                jdbcClient.executeQuery(sqlQuery, SpendPerEmployeeAndAccountDao.class);
+                athenaClient.executeQuery(sqlQuery, SpendPerEmployeeAndAccountDao.class);
         for (SpendPerEmployeeAndAccountDao dao : queryResult.getResultList()) {
             if (!dao.userOwner.matches(userOwnerRegExp)) {
                 continue;

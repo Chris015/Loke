@@ -4,6 +4,7 @@ import loke.aws.db.AthenaClient;
 import loke.aws.db.JdbcManager.QueryResult;
 import loke.service.SpendPerEmployeeByResource.SpendPerEmployeeByResourceDao;
 import loke.utils.CalendarGenerator;
+import loke.utils.ColorPicker;
 import loke.utils.ResourceLoader;
 import loke.utils.SqlConfigInjector;
 import org.junit.Before;
@@ -36,7 +37,7 @@ public class SpendPerEmployeeByResourceTest {
         String userOwnerRegExp = "john.doe";
         SqlConfigInjector sqlConfigInjector = new SqlConfigInjector("database", "table");
         this.sqlQuery = sqlConfigInjector.injectSqlConfig(ResourceLoader.getResource("sql/SpendPerEmployeeByResource.sql"));
-        spendPerEmployeeByResource = new SpendPerEmployeeByResource(athenaClient, userOwnerRegExp, 0, sqlConfigInjector);
+        spendPerEmployeeByResource = new SpendPerEmployeeByResource(athenaClient, userOwnerRegExp, 0,new ColorPicker(), sqlConfigInjector);
     }
 
     @Test
