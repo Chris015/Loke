@@ -7,7 +7,7 @@
                 <th nowrap style="border:1px solid #ddd;padding:8px;width:270px">Products by Account</th>
                 #foreach($date in $dates)
                 <th nowrap style="border:1px solid #ddd;padding:8px">
-                    $simpleDateForamt.format($date.getTime())
+                    $simpleDateFormat.format($date.getTime())
                 </th>
                 #end
                 <th nowrap style="border:1px solid #ddd;padding:8px">Total ($)</th>
@@ -22,11 +22,11 @@
                 </td>
                 #foreach($date in $dates)
                 <td style="border:1px solid #ddd;padding:8px;background-color:#b3ccff;text-align:right;">
-                    $decimalFormatter.format($account.getAccountDailyTotal($dateFormat.format($date.getTime())), 2)
+                    $costFormat.format($account.getAccountDailyTotal($dateFormat.format($date.getTime())))
                 </td>
                 #end
                 <td style="border:1px solid #ddd;padding:8px;background-color:#b3ccff;text-align:right;">
-                    $decimalFormatter.format($account.getAccountTotal(), 2)
+                    $costFormat.format($account.getAccountTotal())
                 </td>
             </tr>
             #set($resources = $account.getResources().values())
@@ -43,7 +43,7 @@
                 #set($temp_day = $resource.getDay($dateFormat.format($date.getTime())))
                 #if($temp_day)
                 <td nowrap style="border:1px solid #ddd;padding:8px;text-align:right">
-                    $decimalFormatter.format($temp_day.getDailyCost(), 2)
+                    $costFormat.format($temp_day.getDailyCost())
                 </td>
                 #else
                 <td nowrap style="border:1px solid #ddd;padding:8px;text-align:right">0.00</td>
@@ -51,7 +51,7 @@
                 #set($temp_day = false)
                 #end
                 <td nowrap style="border:1px solid #ddd;padding:8px;text-align:right">
-                    $decimalFormatter.format($resource.getResourceTotal(),2)
+                    $costFormat.format($resource.getResourceTotal())
                 </td>
             </tr>
             #set($rowColor = !$rowColor)
@@ -62,7 +62,7 @@
             <tfoot>
             <tr>
                 <td style="border:1px solid #ddd;padding:8px;background-color:#428aff" colspan="$colspan">
-                    Total: $$decimalFormatter.format($total, 2)
+                    Total: $$costFormat.format($total)
                 </td>
             </tr>
             </tfoot>

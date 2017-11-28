@@ -28,7 +28,7 @@
                         #set($temp_day = $resource.getDay($dateFormat.format($date.getTime())))
                         #if($temp_day)
                             <td nowrap style="border:1px solid #ddd;padding:8px;text-align:right">
-                                $decimalFormatter.format($temp_day.getDailyCost(), 2)
+                                $costFormat.format($temp_day.getDailyCost())
                             </td>
                         #else
                             <td nowrap style="border:1px solid #ddd;padding:8px;text-align:right">0.00</td>
@@ -36,7 +36,7 @@
                         #set($temp_day = false)
                     #end
                     <td nowrap style="border:1px solid #ddd;padding:8px;text-align:right">
-                        $decimalFormatter.format($resource.getResourceTotal(),2)
+                        $costFormat.format($resource.getResourceTotal())
                     </td>
                 </tr>
                     #set($rowColor = !$rowColor)
@@ -45,7 +45,7 @@
             <tfoot>
             <tr>
                 <td style="border:1px solid #ddd;padding:8px;background-color:#428aff" colspan="$colspan">
-                    Total: $$decimalFormatter.format($user.calculateTotalCost(), 2)
+                    Total: $$costFormat.format($user.calculateTotalCost())
                 </td>
             </tr>
             </tfoot>

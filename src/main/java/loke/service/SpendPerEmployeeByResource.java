@@ -12,16 +12,19 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
 import java.io.StringWriter;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class SpendPerEmployeeByResource implements Service {
     private static final Logger log = LogManager.getLogger(SpendPerEmployeeByResource.class);
+    private SimpleDateFormat layoutDateFormat = new SimpleDateFormat("MMM dd, YYYY", Locale.US);
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private List<Calendar> daysBack = CalendarGenerator.getDaysBack(30);
+    private DecimalFormat costFormatter = DecimalFormatFactory.create(2);
     private AthenaClient athenaClient;
     private String sqlQuery;
-    private List<Calendar> daysBack = CalendarGenerator.getDaysBack(30);
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private ColorPicker colorPicker;
     private String userOwnerRegExp;
     private double generateReportThreshold;
@@ -81,9 +84,9 @@ public class SpendPerEmployeeByResource implements Service {
         context.put("dates", daysBack);
         context.put("user", user);
         context.put("colspan", daysBack.size() + 2);
-        context.put("simpleDateForamt", new SimpleDateFormat("MMM dd, YYYY", Locale.US));
-        context.put("dateFormat", this.dateFormat);
-        context.put("decimalFormatter", DecimalFormatter.class);
+        context.put("simpleDateForamt", layoutDateFormat);
+        context.put("dateFormat", dateFormat);
+        context.put("costFormat", costFormatter);
 
         Template template = velocityEngine.getTemplate("templates/spendperemployeebyresource.vm");
 
@@ -137,7 +140,7 @@ public class SpendPerEmployeeByResource implements Service {
                 + " the past "
                 + daysBack.size()
                 + " days "
-                + DecimalFormatter.format(user.calculateTotalCost(), 2)
+                + costFormatter.format(user.calculateTotalCost())
                 + " USD");
     }
 
@@ -147,7 +150,7 @@ public class SpendPerEmployeeByResource implements Service {
             List<Double> lineSizeValues = getLineSize(resource, scale);
             double total = getResourceTotal(resource);
             Line lineChartPlot = Plots.newLine(Data.newData(lineSizeValues),colorPicker.getNextColor(),
-                    resource.getResourceName() + " " + DecimalFormatter.format(total, 2));
+                    resource.getResourceName() + " " + costFormatter.format(total));
             plots.add(0, lineChartPlot);
         }
         return plots;

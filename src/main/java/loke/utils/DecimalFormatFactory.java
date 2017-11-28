@@ -6,9 +6,9 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-public class DecimalFormatter {
+public class DecimalFormatFactory {
 
-    public static String format(double aDouble, int decimals) {
+    public static DecimalFormat create(int decimals) {
         StringBuilder pattern = new StringBuilder("###,###.");
         for (int i = 0; i < decimals; i++) {
             pattern.append("#");
@@ -23,6 +23,6 @@ public class DecimalFormatter {
         symbols.setGroupingSeparator(' ');
         formatter.setDecimalFormatSymbols(symbols);
 
-        return formatter.format(aDouble);
+        return formatter;
     }
 }

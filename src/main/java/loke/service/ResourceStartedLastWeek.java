@@ -3,7 +3,7 @@ package loke.service;
 import loke.aws.db.AthenaClient;
 import loke.aws.db.JdbcManager;
 import loke.model.Report;
-import loke.utils.DecimalFormatter;
+import loke.utils.DecimalFormatFactory;
 import loke.utils.ResourceLoader;
 import loke.utils.SqlConfigInjector;
 import org.apache.logging.log4j.LogManager;
@@ -13,6 +13,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
 import java.io.StringWriter;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -21,10 +22,12 @@ import java.util.*;
 
 public class ResourceStartedLastWeek implements Service {
     private static final Logger log = LogManager.getLogger(ResourceStartedLastWeek.class);
+    private SimpleDateFormat layoutDateFormat = new SimpleDateFormat("MMM dd, YYYY", Locale.US);
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private DecimalFormat costFormatter = DecimalFormatFactory.create(2);
     private String sqlQuery;
     private AthenaClient athenaClient;
     private String userOwnerRegExp;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private Map<String, String> csvAccounts;
 
     public ResourceStartedLastWeek(AthenaClient athenaClient, String userOwnerRegExp, Map<String, String> csvAccounts,
@@ -68,8 +71,8 @@ public class ResourceStartedLastWeek implements Service {
 
         VelocityContext context = new VelocityContext();
         context.put("user", user);
-        context.put("decimalFormatter", DecimalFormatter.class);
-        context.put("dateFormat", new SimpleDateFormat("MMM dd, YYYY", Locale.US));
+        context.put("costFormat", costFormatter);
+        context.put("dateFormat", layoutDateFormat);
 
         Template template = velocityEngine.getTemplate("templates/resourcesstartedlastweek.vm");
 

@@ -9,16 +9,18 @@ import loke.utils.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class TotalSpendPerEmployee implements Service {
     private static final Logger log = LogManager.getLogger(TotalSpendPerEmployee.class);
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private List<Calendar> daysBack = CalendarGenerator.getDaysBack(30);
+    private DecimalFormat costFormatter = DecimalFormatFactory.create(2);
     private AthenaClient athenaClient;
     private String sqlQuery;
-    private List<Calendar> daysBack = CalendarGenerator.getDaysBack(30);
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private ColorPicker colorPicker;
     private String userOwnerRegExp;
     private double generateReportThreshold;
@@ -99,7 +101,7 @@ public class TotalSpendPerEmployee implements Service {
                 + user.getUserName()
                 + " the past " + daysBack.size()
                 + " days "
-                + DecimalFormatter.format(user.calculateTotalCost(), 2)
+                + costFormatter.format(user.calculateTotalCost())
                 + " USD");
     }
 

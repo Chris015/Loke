@@ -12,18 +12,21 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
 import java.io.StringWriter;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class SpendPerEmployeeByAccount implements Service {
     private static final Logger log = LogManager.getLogger(SpendPerEmployeeByAccount.class);
+    private SimpleDateFormat layoutDateFormat = new SimpleDateFormat("MMM dd, YYYY", Locale.US);
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private List<Calendar> daysBack = CalendarGenerator.getDaysBack(30);
+    private DecimalFormat costFormatter = DecimalFormatFactory.create(2);
     private String sqlQuery;
     private AthenaClient athenaClient;
-    private List<Calendar> daysBack = CalendarGenerator.getDaysBack(30);
     private ColorPicker colorPicker;
     private String userOwnerRegExp;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private double generateReportThreshold;
     private Map<String, String> csvAccounts;
 
@@ -87,9 +90,9 @@ public class SpendPerEmployeeByAccount implements Service {
         context.put("accounts", user.getAccounts().values());
         context.put("total", user.calculateTotalCost());
         context.put("colspan", daysBack.size() + 2);
-        context.put("simpleDateForamt", new SimpleDateFormat("MMM dd, YYYY", Locale.US));
+        context.put("simpleDateFormat", layoutDateFormat);
         context.put("dateFormat", this.dateFormat);
-        context.put("decimalFormatter", DecimalFormatter.class);
+        context.put("costFormat", costFormatter);
 
         Template template = velocityEngine.getTemplate("templates/spendperemployeebyaccount.vm");
 
@@ -113,7 +116,7 @@ public class SpendPerEmployeeByAccount implements Service {
                 + " by account the past "
                 + daysBack.size()
                 + " days. "
-                + DecimalFormatter.format(user.calculateTotalCost(), 2) + " UDS.");
+                + costFormatter.format(user.calculateTotalCost()) + " UDS.");
     }
 
     private List<Line> createPlots(User user, ScaleChecker.Scale scale) {
@@ -131,7 +134,7 @@ public class SpendPerEmployeeByAccount implements Service {
                     colorPicker.getNextColor(),
                     account.getAccountId()
                             + " "
-                            + DecimalFormatter.format(account.getAccountTotal(), 2));
+                            + costFormatter.format(account.getAccountTotal()));
             plots.add(0, lineChartPlot);
         }
         return plots;

@@ -23,7 +23,7 @@
                 <td nowrap style="border:1px solid #ddd;padding:8px;">$resource.getProductName()</td>
                 <td nowrap style="border:1px solid #ddd;padding:8px;">$resource.getResourceId()</td>
                 <td nowrap style="border:1px solid #ddd;padding:8px;">$dateFormat.format($resource.getStartDate().getTime())</td>
-                <td nowrap style="border:1px solid #ddd;padding:8px;">$decimalFormatter.format($resource.getCost(), 2)</td>
+                <td nowrap style="border:1px solid #ddd;padding:8px;">$costFormat.format($resource.getCost())</td>
             </tr>
             #set($style = !$style)
             #end##
@@ -31,7 +31,7 @@
             <tfoot>
             <tr>
                 <td style="border:1px solid #ddd;padding:8px;background-color:#428aff" colspan="5">
-                    Total: $$decimalFormatter.format($user.calculateTotalSpend(), 2)
+                    Total: $$costFormat.format($user.calculateTotalSpend())
                 </td>
             </tr>
             </tfoot>
