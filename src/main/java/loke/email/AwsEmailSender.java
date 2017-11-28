@@ -46,10 +46,6 @@ public class AwsEmailSender {
     }
 
     public void sendAdminMails(List<Admin> admins, List<Employee> adminReports) {
-        if (admins == null || admins.size() == 0) {
-            throw new IllegalArgumentException("No admins specified in the configuration file");
-        }
-
         log.info("Sending emails to administrators");
         StringBuilder htmlBody = new StringBuilder();
         for (Employee employee : adminReports) {

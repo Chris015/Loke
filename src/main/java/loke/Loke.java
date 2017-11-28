@@ -7,13 +7,14 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
 import loke.aws.S3Handler;
+import loke.aws.db.AthenaClient;
 import loke.config.AccountReader;
 import loke.config.Configuration;
 import loke.config.MalformedCSVException;
 import loke.config.YamlReader;
-import loke.aws.db.AthenaClient;
 import loke.email.AwsEmailSender;
 import loke.email.AwsSesHandler;
+import loke.model.Admin;
 import loke.model.Employee;
 import loke.utils.SqlConfigInjector;
 import loke.utils.ZipToGzUtility;
@@ -34,6 +35,9 @@ public class Loke {
     private AwsEmailSender emailSender;
     private S3ZipToGzConverter s3ZipToGzConverter;
 
+    /**
+     * Default constructor
+     */
     public Loke() {
         this.configuration = new YamlReader().readConfigFile("configuration.yaml");
         this.athenaClient = new AthenaClient(
@@ -58,8 +62,8 @@ public class Loke {
     /**
      * Used for injecting mocks when testing.
      *
-     * @param configuration
-     * @param athenaClient
+     * @param configuration custom configuration file for testing
+     * @param athenaClient used for mocking athena dependeny
      */
     public Loke(Configuration configuration, AthenaClient athenaClient, S3ZipToGzConverter s3ZipToGzConverter) {
         this.configuration = configuration;
@@ -127,12 +131,13 @@ public class Loke {
             emailSender.sendEmployeeMails(employeeReports);
         }
 
-        try {
-            if (adminReports.size() > 0) {
-                emailSender.sendAdminMails(configuration.getAdmins(), adminReports);
+        List<Admin> admins = configuration.getAdmins();
+        if (admins != null) {
+            if (adminReports != null && adminReports.size() > 0) {
+                emailSender.sendAdminMails(admins, adminReports);
             }
-        } catch (Exception e) {
-            log.info(e);
+        } else {
+            log.info("No admins specified in the configuration file");
         }
 
     }
